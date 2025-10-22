@@ -1,0 +1,21 @@
+body{
+background-color: #6B21A8;
+
+}
+div{
+background-color: #F59E0B;
+text-align: center;
+margin: auto;
+
+}
+
+div.enlaces{
+background-color: #374151;
+color: white;
+padding: 10px;
+}
+
+a{
+color: white;
+margin: 15px;
+}
