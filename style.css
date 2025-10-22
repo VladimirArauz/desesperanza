@@ -19,3 +19,19 @@ a{
 color: white;
 margin: 15px;
 }
+
+  .galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .pan {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
