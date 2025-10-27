@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Agregar Pan</h1>
+  <form id="formPan">
+    <label>Nombre del pan:</label>
+    <input type="text" id="nombre" required>
+
+    <label>Descripción:</label>
+    <textarea id="descripcion" rows="3" required></textarea>
+
+    <label>Precio ($):</label>
+    <input type="number" id="precio" required>
+
+    <label>Foto del pan:</label>
+    <input type="file" id="foto" accept="image/*" required>
+
+    <button type="submit">Agregar Pan</button>
+  </form>
+
+  <div id="listaPanes"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
