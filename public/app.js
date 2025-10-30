@@ -1,31 +1,27 @@
-const form = document.getElementById("formPan");
-const listaPanes = document.getElementById("listaPanes");
+// ✅ Mostrar catálogo
+app.get('/panes', async (req, res) => {
+    const [rows] = await db.query('SELECT * FROM panes');
+    res.json(rows);
+});
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+// ✅ Agregar pan
+app.post('/agregar', async (req, res) => {
+    const { nombre, costo, descripcion } = req.body;
+    await db.query('INSERT INTO panes (nombre, costo, descripcion) VALUES (?, ?, ?)', [nombre, costo, descripcion]);
+    res.redirect('/catalogo.html');
+});
 
-  // Obtiene los datos del formulario
-  const nombre = document.getElementById("nombre").value;
-  const descripcion = document.getElementById("descripcion").value;
-  const precio = document.getElementById("precio").value;
-  const foto = document.getElementById("foto").files[0];
+// ✅ Eliminar pan
+app.get('/eliminar/:id', async (req, res) => {
+    const { id } = req.params;
+    await db.query('DELETE FROM panes WHERE id = ?', [id]);
+    res.redirect('/catalogo.html');
+});
 
-  // Crear URL temporal para mostrar la imagen
-  const imagenURL = URL.createObjectURL(foto);
-
-  // Crear la tarjeta del pan
-  const card = document.createElement("div");
-  card.classList.add("card");
-  card.innerHTML = `
-    <img src="${imagenURL}" alt="${nombre}">
-    <h3>${nombre}</h3>
-    <p>${descripcion}</p>
-    <strong>$${precio}</strong>
-  `;
-
-  // Agregar la tarjeta a la lista
-  listaPanes.appendChild(card);
-
-  // Limpiar el formulario
-  form.reset();
+// ✅ Modificar pan
+app.post('/modificar/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, costo, descripcion } = req.body;
+    await db.query('UPDATE panes SET nombre=?, costo=?, descripcion=? WHERE id=?', [nombre, costo, descripcion, id]);
+    res.redirect('/catalogo.html');
 });

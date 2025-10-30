@@ -8,25 +8,36 @@
     
 </head>
 <body>
-    <h1>Agregar Pan</h1>
-  <form id="formPan">
-    <label>Nombre del pan:</label>
-    <input type="text" id="nombre" required>
+   <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Agregar Pan</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body class="container p-5">
 
-    <label>Descripción:</label>
-    <textarea id="descripcion" rows="3" required></textarea>
+<h2>Agregar Pan</h2>
 
-    <label>Precio ($):</label>
-    <input type="number" id="precio" required>
+<form action="/agregar" method="POST" class="card p-4">
 
-    <label>Foto del pan:</label>
-    <input type="file" id="foto" accept="image/*" required>
+    <label class="form-label">Nombre del Pan</label>
+    <input type="text" name="nombre" class="form-control" required>
 
-    <button type="submit">Agregar Pan</button>
-  </form>
+    <label class="form-label mt-3">Costo</label>
+    <input type="number" name="costo" step="0.01" class="form-control" required>
 
-  <div id="listaPanes"></div>
+    <label class="form-label mt-3">Descripción</label>
+    <textarea name="descripcion" class="form-control" required></textarea>
 
-  <script src="app.js"></script>
+    <button class="btn btn-primary mt-4">Guardar</button>
+</form>
+
+<br>
+<a href="catalogo.html" class="btn btn-secondary">Volver al catálogo</a>
+
+</body>
+</html>
+
 </body>
 </html>
