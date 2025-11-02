@@ -16,7 +16,7 @@ const upload = multer({ storage });
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',       // Cambia por tu usuario
-    password: '',       // Cambia por tu contraseña
+    password: 'n0m3l0',       // Cambia por tu contraseña
     database: 'desesperanza'
 });
 
