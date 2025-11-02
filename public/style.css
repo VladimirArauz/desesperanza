@@ -1,23 +1,18 @@
-body {
-    background-color: #6B21A8;
-    color: white;
+body{
+background-color: #6B21A8;
+
+}
+div{
+background-color: #F59E0B;
+text-align: center;
+margin: auto;
+
 }
 
-div {
-    background-color: #F59E0B;
-    text-align: center;
-    margin: auto;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-div.enlaces {
-    background-color: #374151;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+div.enlaces{
+background-color: #374151;
+color: white;
+padding: 10px;
 }
 
 a{
