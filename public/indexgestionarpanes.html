@@ -11,7 +11,7 @@
 
 <h2>Agregar Pan</h2>
 
-<form action="/agregar" method="POST" class="card p-4">
+<form action="/agregar" method="POST" class="card p-4" enctype="multipart/form-data">
 
     <label class="form-label">Nombre del Pan</label>
     <input type="text" name="nombre" class="form-control" required>
@@ -21,6 +21,9 @@
 
     <label class="form-label mt-3">Descripción</label>
     <textarea name="descripcion" class="form-control" required></textarea>
+
+    <label class="form-label mt-3">Imagen del Pan</label>
+    <input type="file" name="imagen" accept="image/*" class="form-control">
 
     <button class="btn btn-primary mt-4">Guardar</button>
 </form>
