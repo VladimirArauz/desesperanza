@@ -1,14 +1,13 @@
     body {
       font-family: "Poppins", sans-serif;
-      background-color: #6B21A8;
+      background-color: #fff7e6;
       margin: 0;
       padding: 20px;
-      color: white;
     }
 
     h1 {
       text-align: center;
-      color: white;
+      color: #8b4513;
       margin-bottom: 30px;
     }
 
@@ -25,44 +24,53 @@
       border-radius: 15px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       overflow: hidden;
-      transition: transform 0.2s;
+      transition: all 0.3s ease;
       text-align: center;
       padding-bottom: 10px;
+      border: 2px solid #F59E0B;
     }
 
     .pan:hover {
       transform: scale(1.03);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      border-color: #6B21A8;
     }
 
     .pan img {
       width: 100%;
       height: 200px;
       object-fit: cover;
+      border-bottom: 3px solid #F59E0B;
     }
 
     .pan h2 {
       color: #6B21A8;
-      margin: 10px 0 5px 0;
+      margin: 15px 0 10px 0;
+      font-size: 1.5em;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
 
     .pan p {
       color: #374151;
-      padding: 0 10px;
+      padding: 0 15px;
       font-size: 15px;
+      line-height: 1.5;
     }
 
     .precio {
       background-color: #F59E0B;
       color: white;
       display: inline-block;
-      padding: 6px 12px;
+      padding: 8px 16px;
       border-radius: 20px;
       font-weight: bold;
-      margin-top: 8px;
-      transition: background-color 0.3s;
+      margin-top: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     .precio:hover {
       background-color: #6B21A8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
