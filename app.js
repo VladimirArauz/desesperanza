@@ -18,11 +18,11 @@ const db = mysql.createPool({
     database: 'desesperanza'
 });
 
-// ✅ Obtener todos los panes (cantidad al final)
+// ✅ Obtener todos los panes (orden correcto)
 app.get('/api/panes', async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT id, nombre, costo, descripcion, TO_BASE64(imagen) as imagen, cantidad FROM panes'
+            'SELECT id, nombre, costo, cantidad, descripcion, TO_BASE64(imagen) as imagen FROM panes'
         );
         res.json(rows);
     } catch (err) {
@@ -31,11 +31,11 @@ app.get('/api/panes', async (req, res) => {
     }
 });
 
-// ✅ Obtener uno (cantidad al final)
+// ✅ Obtener un pan por ID (orden correcto)
 app.get('/api/panes/:id', async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT id, nombre, costo, descripcion, TO_BASE64(imagen) as imagen, cantidad FROM panes WHERE id=?',
+            'SELECT id, nombre, costo, cantidad, descripcion, TO_BASE64(imagen) as imagen FROM panes WHERE id=?',
             [req.params.id]
         );
         res.json(rows[0]);
@@ -45,16 +45,17 @@ app.get('/api/panes/:id', async (req, res) => {
     }
 });
 
-// ✅ Insertar (cantidad al final)
+// ✅ Insertar pan (cantidad ANTES de descripción e imagen)
 app.post('/api/panes', upload.single('imagen'), async (req, res) => {
     try {
-        const { nombre, costo, descripcion, cantidad } = req.body;
+        const { nombre, costo, cantidad, descripcion } = req.body;
         const imagen = req.file ? req.file.buffer : null;
 
         await db.query(
-            'INSERT INTO panes (nombre, costo, descripcion, imagen, cantidad) VALUES (?, ?, ?, ?, ?)',
-            [nombre, costo, descripcion, imagen, cantidad]
+            'INSERT INTO panes (nombre, costo, cantidad, descripcion, imagen) VALUES (?, ?, ?, ?, ?)',
+            [nombre, costo, cantidad, descripcion, imagen]
         );
+
         res.sendStatus(201);
     } catch (err) {
         console.error(err);
@@ -62,21 +63,21 @@ app.post('/api/panes', upload.single('imagen'), async (req, res) => {
     }
 });
 
-// ✅ Actualizar (cantidad al final)
+// ✅ Actualizar pan (cantidad en el orden correcto)
 app.put('/api/panes/:id', upload.single('imagen'), async (req, res) => {
     try {
-        const { nombre, costo, descripcion, cantidad } = req.body;
+        const { nombre, costo, cantidad, descripcion } = req.body;
         const imagen = req.file ? req.file.buffer : null;
 
         if (imagen) {
             await db.query(
-                'UPDATE panes SET nombre=?, costo=?, descripcion=?, imagen=?, cantidad=? WHERE id=?',
-                [nombre, costo, descripcion, imagen, cantidad, req.params.id]
+                'UPDATE panes SET nombre=?, costo=?, cantidad=?, descripcion=?, imagen=? WHERE id=?',
+                [nombre, costo, cantidad, descripcion, imagen, req.params.id]
             );
         } else {
             await db.query(
-                'UPDATE panes SET nombre=?, costo=?, descripcion=?, cantidad=? WHERE id=?',
-                [nombre, costo, descripcion, cantidad, req.params.id]
+                'UPDATE panes SET nombre=?, costo=?, cantidad=?, descripcion=? WHERE id=?',
+                [nombre, costo, cantidad, descripcion, req.params.id]
             );
         }
 
@@ -87,6 +88,7 @@ app.put('/api/panes/:id', upload.single('imagen'), async (req, res) => {
     }
 });
 
+// ✅ Eliminar pan (no cambia)
 app.delete('/api/panes/:id', async (req, res) => {
     try {
         await db.query('DELETE FROM panes WHERE id=?', [req.params.id]);
