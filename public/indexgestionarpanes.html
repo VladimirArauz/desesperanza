@@ -14,22 +14,33 @@
         <!-- FORMULARIO PARA AGREGAR/EDITAR PANES -->
         <form id="form-pan" class="mb-5" enctype="multipart/form-data">
             <input type="hidden" id="pan-id">
+
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre del Pan</label>
                 <input type="text" class="form-control" id="nombre" required>
             </div>
+
             <div class="mb-3">
                 <label for="costo" class="form-label">Costo</label>
                 <input type="number" class="form-control" id="costo" required>
             </div>
+
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
                 <textarea class="form-control" id="descripcion" rows="2" required></textarea>
             </div>
+
+            <!-- ✅ NUEVO: campo cantidad -->
+            <div class="mb-3">
+                <label for="cantidad" class="form-label">Cantidad</label>
+                <input type="number" class="form-control" id="cantidad" required>
+            </div>
+
             <div class="mb-3">
                 <label for="imagen" class="form-label">Imagen</label>
                 <input type="file" class="form-control" id="imagen" accept="image/*">
             </div>
+
             <button type="submit" class="btn btn-primary">Guardar Pan</button>
         </form>
 
@@ -42,3 +53,4 @@
     <script src="apppanes.js"></script>
 </body>
 </html>
+

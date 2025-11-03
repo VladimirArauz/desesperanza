@@ -8,24 +8,22 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Configurar multer para almacenar imagen en memoria (buffer)
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Conexión a MySQL
 const db = mysql.createPool({
     host: 'localhost',
-    user: 'root',       // Cambia por tu usuario
-    password: 'n0m3l0',       // Cambia por tu contraseña
+    user: 'root',
+    password: 'n0m3l0',
     database: 'desesperanza'
 });
 
-// ---------------------- RUTAS ----------------------
-
-// Obtener todos los panes
+// ✅ Obtener todos los panes (cantidad al final)
 app.get('/api/panes', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT id, nombre, costo, descripcion, TO_BASE64(imagen) as imagen FROM panes');
+        const [rows] = await db.query(
+            'SELECT id, nombre, costo, descripcion, TO_BASE64(imagen) as imagen, cantidad FROM panes'
+        );
         res.json(rows);
     } catch (err) {
         console.error(err);
@@ -33,10 +31,13 @@ app.get('/api/panes', async (req, res) => {
     }
 });
 
-// Obtener un pan por ID
+// ✅ Obtener uno (cantidad al final)
 app.get('/api/panes/:id', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT id, nombre, costo, descripcion, TO_BASE64(imagen) as imagen FROM panes WHERE id=?', [req.params.id]);
+        const [rows] = await db.query(
+            'SELECT id, nombre, costo, descripcion, TO_BASE64(imagen) as imagen, cantidad FROM panes WHERE id=?',
+            [req.params.id]
+        );
         res.json(rows[0]);
     } catch (err) {
         console.error(err);
@@ -44,13 +45,16 @@ app.get('/api/panes/:id', async (req, res) => {
     }
 });
 
-// Agregar un pan
+// ✅ Insertar (cantidad al final)
 app.post('/api/panes', upload.single('imagen'), async (req, res) => {
     try {
-        const { nombre, costo, descripcion } = req.body;
+        const { nombre, costo, descripcion, cantidad } = req.body;
         const imagen = req.file ? req.file.buffer : null;
 
-        await db.query('INSERT INTO panes (nombre, costo, descripcion, imagen) VALUES (?, ?, ?, ?)', [nombre, costo, descripcion, imagen]);
+        await db.query(
+            'INSERT INTO panes (nombre, costo, descripcion, imagen, cantidad) VALUES (?, ?, ?, ?, ?)',
+            [nombre, costo, descripcion, imagen, cantidad]
+        );
         res.sendStatus(201);
     } catch (err) {
         console.error(err);
@@ -58,16 +62,22 @@ app.post('/api/panes', upload.single('imagen'), async (req, res) => {
     }
 });
 
-// Actualizar un pan
+// ✅ Actualizar (cantidad al final)
 app.put('/api/panes/:id', upload.single('imagen'), async (req, res) => {
     try {
-        const { nombre, costo, descripcion } = req.body;
+        const { nombre, costo, descripcion, cantidad } = req.body;
         const imagen = req.file ? req.file.buffer : null;
 
         if (imagen) {
-            await db.query('UPDATE panes SET nombre=?, costo=?, descripcion=?, imagen=? WHERE id=?', [nombre, costo, descripcion, imagen, req.params.id]);
+            await db.query(
+                'UPDATE panes SET nombre=?, costo=?, descripcion=?, imagen=?, cantidad=? WHERE id=?',
+                [nombre, costo, descripcion, imagen, cantidad, req.params.id]
+            );
         } else {
-            await db.query('UPDATE panes SET nombre=?, costo=?, descripcion=? WHERE id=?', [nombre, costo, descripcion, req.params.id]);
+            await db.query(
+                'UPDATE panes SET nombre=?, costo=?, descripcion=?, cantidad=? WHERE id=?',
+                [nombre, costo, descripcion, cantidad, req.params.id]
+            );
         }
 
         res.sendStatus(200);
@@ -77,7 +87,6 @@ app.put('/api/panes/:id', upload.single('imagen'), async (req, res) => {
     }
 });
 
-// Eliminar un pan
 app.delete('/api/panes/:id', async (req, res) => {
     try {
         await db.query('DELETE FROM panes WHERE id=?', [req.params.id]);
@@ -88,7 +97,6 @@ app.delete('/api/panes/:id', async (req, res) => {
     }
 });
 
-// ---------------------- INICIAR SERVIDOR ----------------------
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
 
