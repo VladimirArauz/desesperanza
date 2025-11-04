@@ -12,7 +12,16 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand fs-3 fw-bold" href="#">Desesperanza</a>
-            <div class="d-flex">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <!-- ✅ Mostrar nombre del usuario -->
+                <div id="user-info" class="fw-semibold text-primary"></div>
+
+                <!-- ✅ Botón login o logout -->
+                <button id="login-btn" class="btn btn-outline-primary">Iniciar Sesión</button>
+                <button id="logout-btn" class="btn btn-danger d-none">Cerrar Sesión</button>
+
                 <button class="btn btn-outline-primary position-relative">
                     Carrito
                     <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
@@ -39,6 +48,40 @@
         </div>
     </div>
 
+    <script>
+        // ✅ VERIFICA si hay usuario guardado en LocalStorage
+        function verificarSesion() {
+            const usuario = localStorage.getItem("usuario");
+            const userInfo = document.getElementById("user-info");
+            const loginBtn = document.getElementById("login-btn");
+            const logoutBtn = document.getElementById("logout-btn");
+
+            if (usuario) {
+                userInfo.textContent = "Bienvenido, " + usuario;
+                loginBtn.classList.add("d-none");
+                logoutBtn.classList.remove("d-none");
+            } else {
+                userInfo.textContent = "";
+                loginBtn.classList.remove("d-none");
+                logoutBtn.classList.add("d-none");
+            }
+        }
+
+        // ✅ Botón de iniciar sesión -> va al login
+        document.getElementById("login-btn").addEventListener("click", () => {
+            window.location.href = "indexlogin.html";
+        });
+
+        // ✅ Botón cerrar sesión
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            localStorage.removeItem("usuario");
+            verificarSesion();
+        });
+
+        verificarSesion();
+    </script>
+
     <script src="apppanes.js"></script>
 </body>
 </html>
+

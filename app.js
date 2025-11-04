@@ -2,11 +2,18 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const multer = require('multer');
 const cors = require('cors');
+const session = require('express-session');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+
+app.use(session({
+    secret: "desesperanzaSecret",
+    resave: false,
+    saveUninitialized: true
+}));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -18,7 +25,11 @@ const db = mysql.createPool({
     database: 'desesperanza'
 });
 
-// ✅ Obtener todos los panes (orden correcto)
+/* ------------------------------------------------------------------
+   ✅   SECCIÓN PANES
+-------------------------------------------------------------------*/
+
+// Obtener todos los panes
 app.get('/api/panes', async (req, res) => {
     try {
         const [rows] = await db.query(
@@ -31,7 +42,7 @@ app.get('/api/panes', async (req, res) => {
     }
 });
 
-// ✅ Obtener un pan por ID (orden correcto)
+// Obtener pan por ID
 app.get('/api/panes/:id', async (req, res) => {
     try {
         const [rows] = await db.query(
@@ -45,7 +56,7 @@ app.get('/api/panes/:id', async (req, res) => {
     }
 });
 
-// ✅ Insertar pan (cantidad ANTES de descripción e imagen)
+// Insertar pan
 app.post('/api/panes', upload.single('imagen'), async (req, res) => {
     try {
         const { nombre, costo, cantidad, descripcion } = req.body;
@@ -63,7 +74,7 @@ app.post('/api/panes', upload.single('imagen'), async (req, res) => {
     }
 });
 
-// ✅ Actualizar pan (cantidad en el orden correcto)
+// Actualizar pan
 app.put('/api/panes/:id', upload.single('imagen'), async (req, res) => {
     try {
         const { nombre, costo, cantidad, descripcion } = req.body;
@@ -88,7 +99,7 @@ app.put('/api/panes/:id', upload.single('imagen'), async (req, res) => {
     }
 });
 
-// ✅ Eliminar pan (no cambia)
+// Eliminar pan
 app.delete('/api/panes/:id', async (req, res) => {
     try {
         await db.query('DELETE FROM panes WHERE id=?', [req.params.id]);
@@ -99,6 +110,65 @@ app.delete('/api/panes/:id', async (req, res) => {
     }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+/* ------------------------------------------------------------------
+   ✅  SECCIÓN USUARIOS: REGISTRO - LOGIN - LOGOUT
+-------------------------------------------------------------------*/
 
+// Registrar usuario
+app.post("/api/registro", async (req, res) => {
+    try {
+        const { nombre, contraseña } = req.body;
+
+        await db.query(
+            "INSERT INTO usuario (nombre, contraseña) VALUES (?, ?)",
+            [nombre, contraseña]
+        );
+
+        res.sendStatus(201);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error al registrar usuario");
+    }
+});
+
+// Login usuario
+app.post("/api/login", async (req, res) => {
+    try {
+        const { nombre, contraseña } = req.body;
+
+        const [rows] = await db.query(
+            "SELECT * FROM usuario WHERE nombre=? AND contraseña=?",
+            [nombre, contraseña]
+        );
+
+        if (rows.length > 0) {
+            req.session.usuario = nombre;
+            res.json({ login: true, usuario: nombre });
+        } else {
+            res.status(401).send("Credenciales incorrectas");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error al iniciar sesión");
+    }
+});
+
+// Logout
+app.get("/api/logout", (req, res) => {
+    req.session.destroy();
+    res.send("Sesión cerrada");
+});
+
+// Ver sesión
+app.get("/api/sesion", (req, res) => {
+    if (req.session.usuario) {
+        res.json({ usuario: req.session.usuario });
+    } else {
+        res.json({ usuario: null });
+    }
+});
+
+/* ------------------------------------------------------------------*/
+
+const PORT = 3000;
+app.listen(PORT, () => console.log(`✅ Servidor corriendo en http://localhost:${PORT}`));
