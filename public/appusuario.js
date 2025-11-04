@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname)));
 const db = mysql.createPool({
     host: "localhost",
     user: "root",        // <-- cámbialo si tu usuario es diferente
-    password: "",        // <-- cámbialo si tu MySQL tiene contraseña
+    password: "n0m3l0",        // <-- cámbialo si tu MySQL tiene contraseña
     database: "desesperanza"
 });
 
