@@ -15,14 +15,19 @@
 
             <div class="d-flex align-items-center gap-3">
 
-                <!-- ✅ Mostrar nombre del usuario -->
+                <!-- ✅ Nombre del usuario -->
                 <div id="user-info" class="fw-semibold text-primary"></div>
 
-                <!-- ✅ Botón login o logout -->
-                <button id="login-btn" class="btn btn-outline-primary">Iniciar Sesión</button>
+                <!-- ✅ Botón para abrir Login Modal -->
+                <button id="login-btn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    Iniciar Sesión
+                </button>
+
+                <!-- ✅ Botón cerrar sesión -->
                 <button id="logout-btn" class="btn btn-danger d-none">Cerrar Sesión</button>
 
-                <button class="btn btn-outline-primary position-relative">
+                <!-- ✅ Carrito -->
+                <button class="btn btn-outline-primary position-relative" data-bs-toggle="modal" data-bs-target="#carritoModal">
                     Carrito
                     <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                 </button>
@@ -40,16 +45,62 @@
         </div>
     </div>
 
-    <!-- CATALOGO DE PANES -->
+    <!-- CATALOGO -->
     <div class="container">
         <h3 class="mb-3">Catálogo de Panes</h3>
         <div id="catalogo-panes" class="row row-cols-1 row-cols-md-3 g-4">
-            <!-- Aquí se cargan los panes desde apppanes.js -->
+            <!-- Panes cargados desde apppanes.js -->
         </div>
     </div>
 
+    <!-- ✅ MODAL LOGIN -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Iniciar Sesión</h5>
+            <button class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+
+                <label class="form-label">Nombre</label>
+                <input id="login-nombre" class="form-control" type="text">
+
+                <label class="form-label mt-2">Contraseña</label>
+                <input id="login-pass" class="form-control" type="password">
+
+          </div>
+          <div class="modal-footer">
+            <button id="btn-logear" class="btn btn-primary">Entrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ MODAL CARRITO -->
+    <div class="modal fade" id="carritoModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Carrito de Compras</h5>
+            <button class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+
+            <ul id="lista-carrito" class="list-group">
+              <!-- Aquí van los panes agregados -->
+            </ul>
+
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success">Finalizar Compra</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ LOGICA DE SESION -->
     <script>
-        // ✅ VERIFICA si hay usuario guardado en LocalStorage
         function verificarSesion() {
             const usuario = localStorage.getItem("usuario");
             const userInfo = document.getElementById("user-info");
@@ -67,21 +118,39 @@
             }
         }
 
-        // ✅ Botón de iniciar sesión -> va al login
-        document.getElementById("login-btn").addEventListener("click", () => {
-            window.location.href = "indexlogin.html";
-        });
-
-        // ✅ Botón cerrar sesión
         document.getElementById("logout-btn").addEventListener("click", () => {
             localStorage.removeItem("usuario");
             verificarSesion();
+        });
+
+        document.getElementById("btn-logear").addEventListener("click", async () => {
+            const nombre = document.getElementById("login-nombre").value;
+            const pass = document.getElementById("login-pass").value;
+
+            const res = await fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nombre, contraseña: pass })
+            });
+
+            const data = await res.json();
+
+            if (data.ok) {
+                localStorage.setItem("usuario", nombre);
+                verificarSesion();
+                document.querySelector("#loginModal .btn-close").click();
+                alert("Bienvenido!");
+            } else {
+                alert("Datos incorrectos");
+            }
         });
 
         verificarSesion();
     </script>
 
     <script src="apppanes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
 
